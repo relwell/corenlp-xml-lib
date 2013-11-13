@@ -1,5 +1,5 @@
 """
-Submodule for handling document-level stuff
+Sub-module for handling document-level stuff
 """
 from lxml import etree
 
@@ -23,7 +23,7 @@ class Document:
         self._xml_string = xml_string
         self._xml = etree.fromstring(xml_string)
 
-    def get_sentiment(self):
+    def _get_sentiment(self):
         """
         Returns average sentiment of document.
         """
@@ -31,17 +31,17 @@ class Document:
             results = self._xml.xpath('/root/document/sentences')
             self._sentiment = float(results[0].get("averageSentiment")) if len(results) > 0 else None
         return self._sentiment
-    sentiment = property(get_sentiment)
+    sentiment = property(_get_sentiment)
 
-    def get_sentences(self):
+    def _get_sentences(self):
         """
         Returns sentence objects
         """
         if self._sentences is None:
             sentences = [Sentence(element) for element in self._xml.xpath('/root/document/sentences/sentence')]
-            self._sentences = dict([(s.get_id(), s) for s in sentences])
+            self._sentences = dict([(s.id, s) for s in sentences])
         return self._sentences.values()
-    sentences = property(get_sentences)
+    sentences = property(_get_sentences)
 
 
 class Sentence():
@@ -64,7 +64,7 @@ class Sentence():
         """
         self._element = element
 
-    def get_id(self):
+    def _get_id(self):
         """
         :return: the ID attribute of the sentence
         :rtype id: int
@@ -72,9 +72,9 @@ class Sentence():
         if self._id is None:
             self._id = int(self._element.get('id'))
         return self._id
-    id = property(get_id)
+    id = property(_get_id)
 
-    def get_sentiment(self):
+    def _get_sentiment(self):
         """
         :return: the sentiment value of this sentence
         :rtype int:
@@ -82,9 +82,9 @@ class Sentence():
         if self._sentiment is None:
             self._sentiment = int(self._element.get('sentiment'))
         return self._sentiment
-    sentiment = property(get_sentiment)
+    sentiment = property(_get_sentiment)
 
-    def get_tokens(self):
+    def _get_tokens(self):
         """
         :return: a list of Token instances
         :rtype: list
@@ -93,7 +93,7 @@ class Sentence():
             tokens = [Token(element) for element in self._element.iterfind('token')]
             self._tokens = dict([(int(t.get('id')), t) for t in tokens])
         return self._tokens
-    tokens = property(get_tokens)
+    tokens = property(_get_tokens)
 
 
 class Token():
