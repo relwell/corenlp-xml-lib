@@ -7,6 +7,6 @@ setup(
     author_email = "robert.elwell@gmail.com",
     description = "Library for interacting with the XML output of the Stanford CoreNLP pipeline.",
     license = "Other",
-    packages = ["corenlp-xml"],
+    packages = ["corenlp_xml"],
     depends = ["lxml"]
     )
