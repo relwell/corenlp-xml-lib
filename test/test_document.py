@@ -16,10 +16,9 @@ class TestDocument(unittest.TestCase):
     def test_sentiment(self):
         self.assertIsNone(self._document._sentiment, "Sentiment should be lazy-loaded")
         expected = 1.2173913043478262
-        self.assertEquals(expected, self._document._get_sentiment(), "Sentiment should be returned upon invocation")
+        self.assertEquals(expected, self._document.sentiment, "Sentiment should be returned for public property")
         self.assertIsNotNone(self._document._sentiment, "Sentiment should be memoized")
         self.assertEquals(expected, self._document._sentiment, "Sentiment should be memoized")
-        self.assertEquals(expected, self._document.sentiment, "Sentiment property should return same value as call")
 
     def test_sentences(self):
         self.assertIsNone(self._document._sentences_dict, "Sentences should be lazy-loaded")
@@ -50,9 +49,8 @@ class TestSentence(unittest.TestCase):
 
     def test_id(self):
         """ Value isn't None because it's initialized when you create a Document. Hence why mocks might be nice. """
-        self.assertEquals(1, self._sentence._get_id())
+        self.assertEquals(1, self._sentence.id, "ID should be an int")
         self.assertIsNotNone(self._sentence._id, "id property should be memoized")
-        self.assertEquals(1, self._sentence.id)
 
     def test_sentiment(self):
         self.assertIsNone(self._sentence._sentiment, "Sentiment should be lazy-loaded")

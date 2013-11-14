@@ -3,6 +3,7 @@ Sub-module for handling document-level stuff
 """
 from lxml import etree
 from collections import OrderedDict
+from nltk import Tree
 
 
 class Document:
@@ -24,7 +25,8 @@ class Document:
         self._xml_string = xml_string
         self._xml = etree.fromstring(xml_string)
 
-    def _get_sentiment(self):
+    @property
+    def sentiment(self):
         """
         Returns average sentiment of document.
         :return: average sentiment of the document
@@ -34,7 +36,6 @@ class Document:
             results = self._xml.xpath('/root/document/sentences')
             self._sentiment = float(results[0].get("averageSentiment")) if len(results) > 0 else None
         return self._sentiment
-    sentiment = property(_get_sentiment)
 
     def _get_sentences_dict(self):
         """
@@ -47,14 +48,14 @@ class Document:
             self._sentences_dict = OrderedDict([(s.id, s) for s in sentences])
         return self._sentences_dict
 
-    def _get_sentences(self):
+    @property
+    def sentences(self):
         """
         Returns the ordered dict of sentences as a list.
         :return: list of sentences, in order
         :rtype:list
         """
         return self._get_sentences_dict().values()
-    sentences = property(_get_sentences)
 
     def get_sentence_by_id(self, id):
         """
@@ -73,6 +74,7 @@ class Sentence():
     _sentiment = None
     _tokens_dict = None
     _element = None
+    _parse = None
     _basic_dependencies = None
     _collapsed_dependencies = None
     _collapsed_ccprocessed_dependencies = None
@@ -85,7 +87,8 @@ class Sentence():
         """
         self._element = element
 
-    def _get_id(self):
+    @property
+    def id(self):
         """
         :return: the ID attribute of the sentence
         :rtype id: int
@@ -93,9 +96,9 @@ class Sentence():
         if self._id is None:
             self._id = int(self._element.get('id'))
         return self._id
-    id = property(_get_id)
 
-    def _get_sentiment(self):
+    @property
+    def sentiment(self):
         """
         :return: the sentiment value of this sentence
         :rtype int:
@@ -103,7 +106,6 @@ class Sentence():
         if self._sentiment is None:
             self._sentiment = int(self._element.get('sentiment'))
         return self._sentiment
-    sentiment = property(_get_sentiment)
 
     def _get_tokens_dict(self):
         """
@@ -115,13 +117,13 @@ class Sentence():
             self._tokens_dict = OrderedDict([(t.id, t) for t in tokens])
         return self._tokens_dict
 
-    def _get_tokens(self):
+    @property
+    def tokens(self):
         """
         :return: a list of Token instances
         :rtype:list
         """
         return self._get_tokens_dict().values()
-    tokens = property(_get_tokens)
 
     def get_token_by_id(self, id):
         """
@@ -131,6 +133,16 @@ class Sentence():
         :rtype:class:`Token`
         """
         return self._get_tokens_dict().get(id)
+
+    @property
+    def parse(self):
+        """
+        :return: The NLTK parse tree
+        :rtype:class:`nltk.Tree`
+        """
+        if self._parse is None:
+            self._parse = Tree.parse(self._parse)
+        return self._parse
 
 
 class Token():
@@ -156,7 +168,8 @@ class Token():
         """
         self._element = element
 
-    def _get_id(self):
+    @property
+    def id(self):
         """
         Lazy-loads ID
         :return: The ID of the token element
@@ -165,9 +178,9 @@ class Token():
         if self._id is None:
             self._id = int(self._element.get('id'))
         return self._id
-    id = property(_get_id)
 
-    def _get_word(self):
+    @property
+    def word(self):
         """
         Lazy-loads word value
         :return: The plain string value of the word
@@ -178,12 +191,12 @@ class Token():
             if len(words) > 0:
                 self._word = words[0]
         return self._word
-    word = property(_get_word)
 
-    def _get_lemma(self):
+    @property
+    def lemma(self):
         """
         Lazy-loads the lemma for this word
-        :return: The plains tring value of the word lemma
+        :return: The plain string value of the word lemma
         :rtype: str
         """
         if self._lemma is None:
@@ -191,9 +204,9 @@ class Token():
             if len(lemmata) > 0:
                 self._lemma = lemmata[0]
         return self._lemma
-    lemma = property(_get_lemma)
 
-    def _get_character_offset_begin(self):
+    @property
+    def character_offset_begin(self):
         """
         Lazy-loads character offset begin node
         :return: the integer value of the offset
@@ -204,9 +217,9 @@ class Token():
             if len(offsets) > 0:
                 self._character_offset_begin = int(offsets[0])
         return self._character_offset_begin
-    character_offset_begin = property(_get_character_offset_begin)
 
-    def _get_character_offset_end(self):
+    @property
+    def character_offset_end(self):
         """
         Lazy-loads character offset end node
         :return: the integer value of the offset
@@ -217,9 +230,9 @@ class Token():
             if len(offsets) > 0:
                 self._character_offset_end = int(offsets[0])
         return self._character_offset_end
-    character_offset_end = property(_get_character_offset_end)
 
-    def _get_pos(self):
+    @property
+    def pos(self):
         """
         Lazy-loads the part of speech tag for this word
         :return: The plain string value of the POS tag for the word
@@ -230,9 +243,9 @@ class Token():
             if len(poses) > 0:
                 self._pos = poses[0]
         return self._pos
-    pos = property(_get_pos)
 
-    def _get_ner(self):
+    @property
+    def ner(self):
         """
         Lazy-loads the NER for this word
         :return: The plain string value of the NER tag for the word
@@ -243,9 +256,9 @@ class Token():
             if len(ners) > 0:
                 self._ner = ners[0]
         return self._ner
-    ner = property(_get_ner)
 
-    def _get_speaker(self):
+    @property
+    def speaker(self):
         """
         Lazy-loads the speaker for this word
         :return: The plain string value of the speaker tag for the word
@@ -256,6 +269,5 @@ class Token():
             if len(speakers) > 0:
                 self._speaker = speakers[0]
         return self._speaker
-    speaker = property(_get_speaker)
 
 
