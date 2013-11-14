@@ -2,6 +2,7 @@
 Sub-module for handling document-level stuff
 """
 from lxml import etree
+from collections import OrderedDict
 
 
 class Document:
@@ -39,7 +40,7 @@ class Document:
         """
         if self._sentences is None:
             sentences = [Sentence(element) for element in self._xml.xpath('/root/document/sentences/sentence')]
-            self._sentences = dict([(s.id, s) for s in sentences])
+            self._sentences = OrderedDict([(s.id, s) for s in sentences])
         return self._sentences.values()
     sentences = property(_get_sentences)
 
@@ -90,9 +91,9 @@ class Sentence():
         :rtype: list
         """
         if self._tokens is None:
-            tokens = [Token(element) for element in self._element.iterfind('token')]
-            self._tokens = dict([(int(t.get('id')), t) for t in tokens])
-        return self._tokens
+            tokens = [Token(element) for element in self._element.xpath('tokens/token')]
+            self._tokens = OrderedDict([(t.id, t) for t in tokens])
+        return self._tokens.values()
     tokens = property(_get_tokens)
 
 
@@ -101,13 +102,15 @@ class Token():
     Wraps the token XML element
     """
 
-    word = None
-    lemma = None
-    character_offset_begin = None
-    character_offset_end = None
-    pos = None
-    ner = None
-    speaker = None
+    _id = None
+    _word = None
+    _lemma = None
+    _character_offset_begin = None
+    _character_offset_end = None
+    _pos = None
+    _ner = None
+    _speaker = None
+    _element = None
 
     def __init__(self, element):
         """
@@ -115,4 +118,108 @@ class Token():
         :param element: An etree element
         :type element:class:`lxml.etree.ElementBase`
         """
-        self.element = element
+        self._element = element
+
+    def _get_id(self):
+        """
+        Lazy-loads ID
+        :return: The ID of the token element
+        :rtype: int
+        """
+        if self._id is None:
+            self._id = int(self._element.get('id'))
+        return self._id
+    id = property(_get_id)
+
+    def _get_word(self):
+        """
+        Lazy-loads word value
+        :return: The plain string value of the word
+        :rtype: str
+        """
+        if self._word is None:
+            words = self._element.xpath('word/text()')
+            if len(words) > 0:
+                self._word = words[0]
+        return self._word
+    word = property(_get_word)
+
+    def _get_lemma(self):
+        """
+        Lazy-loads the lemma for this word
+        :return: The plains tring value of the word lemma
+        :rtype: str
+        """
+        if self._lemma is None:
+            lemmata = self._element.xpath('lemma/text()')
+            if len(lemmata) > 0:
+                self._lemma = lemmata[0]
+        return self._lemma
+    lemma = property(_get_lemma)
+
+    def _get_character_offset_begin(self):
+        """
+        Lazy-loads character offset begin node
+        :return: the integer value of the offset
+        :rtype: int
+        """
+        if self._character_offset_begin is None:
+            offsets = self._element.xpath('CharacterOffsetBegin/text()')
+            if len(offsets) > 0:
+                self._character_offset_begin = int(offsets[0])
+        return self._character_offset_begin
+    character_offset_begin = property(_get_character_offset_begin)
+
+    def _get_character_offset_end(self):
+        """
+        Lazy-loads character offset end node
+        :return: the integer value of the offset
+        :rtype: int
+        """
+        if self._character_offset_end is None:
+            offsets = self._element.xpath('CharacterOffsetEnd/text()')
+            if len(offsets) > 0:
+                self._character_offset_end = int(offsets[0])
+        return self._character_offset_end
+    character_offset_end = property(_get_character_offset_end)
+
+    def _get_pos(self):
+        """
+        Lazy-loads the part of speech tag for this word
+        :return: The plain string value of the POS tag for the word
+        :rtype: str
+        """
+        if self._pos is None:
+            poses = self._element.xpath('POS/text()')
+            if len(poses) > 0:
+                self._pos = poses[0]
+        return self._pos
+    pos = property(_get_pos)
+
+    def _get_ner(self):
+        """
+        Lazy-loads the NER for this word
+        :return: The plain string value of the NER tag for the word
+        :rtype: str
+        """
+        if self._ner is None:
+            ners = self._element.xpath('NER/text()')
+            if len(ners) > 0:
+                self._ner = ners[0]
+        return self._ner
+    ner = property(_get_ner)
+
+    def _get_speaker(self):
+        """
+        Lazy-loads the speaker for this word
+        :return: The plain string value of the speaker tag for the word
+        :rtype: str
+        """
+        if self._speaker is None:
+            speakers = self._element.xpath('Speaker/text()')
+            if len(speakers) > 0:
+                self._speaker = speakers[0]
+        return self._speaker
+    speaker = property(_get_speaker)
+
+
