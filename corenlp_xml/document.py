@@ -10,7 +10,7 @@ class Document:
     This class abstracts a Stanford CoreNLP Document
     """
 
-    _sentences = None
+    _sentences_dict = None
     _sentiment = None
     _xml_string = None
     _xml = None
@@ -27,6 +27,8 @@ class Document:
     def _get_sentiment(self):
         """
         Returns average sentiment of document.
+        :return: average sentiment of the document
+        :rtype: float
         """
         if self._sentiment is None:
             results = self._xml.xpath('/root/document/sentences')
@@ -34,15 +36,33 @@ class Document:
         return self._sentiment
     sentiment = property(_get_sentiment)
 
-    def _get_sentences(self):
+    def _get_sentences_dict(self):
         """
         Returns sentence objects
+        :return: order dict of sentences
+        :rtype:class:`OrderedDict`
         """
-        if self._sentences is None:
+        if self._sentences_dict is None:
             sentences = [Sentence(element) for element in self._xml.xpath('/root/document/sentences/sentence')]
-            self._sentences = OrderedDict([(s.id, s) for s in sentences])
-        return self._sentences.values()
+            self._sentences_dict = OrderedDict([(s.id, s) for s in sentences])
+        return self._sentences_dict
+
+    def _get_sentences(self):
+        """
+        Returns the ordered dict of sentences as a list.
+        :return: list of sentences, in order
+        :rtype:list
+        """
+        return self._get_sentences_dict().values()
     sentences = property(_get_sentences)
+
+    def get_sentence_by_id(self, id):
+        """
+        :param id: the ID of the sentence, as defined in the XML
+        :type id: int
+        :return:class:`Sentence`
+        """
+        return self._get_sentences_dict().get(id)
 
 
 class Sentence():
@@ -51,7 +71,7 @@ class Sentence():
     """
     _id = None
     _sentiment = None
-    _tokens = None
+    _tokens_dict = None
     _element = None
     _basic_dependencies = None
     _collapsed_dependencies = None
@@ -85,16 +105,32 @@ class Sentence():
         return self._sentiment
     sentiment = property(_get_sentiment)
 
+    def _get_tokens_dict(self):
+        """
+        :return: The ordered dict of the tokens
+        :rtype:class:`OrderedDict`
+        """
+        if self._tokens_dict is None:
+            tokens = [Token(element) for element in self._element.xpath('tokens/token')]
+            self._tokens_dict = OrderedDict([(t.id, t) for t in tokens])
+        return self._tokens_dict
+
     def _get_tokens(self):
         """
         :return: a list of Token instances
-        :rtype: list
+        :rtype:list
         """
-        if self._tokens is None:
-            tokens = [Token(element) for element in self._element.xpath('tokens/token')]
-            self._tokens = OrderedDict([(t.id, t) for t in tokens])
-        return self._tokens.values()
+        return self._get_tokens_dict().values()
     tokens = property(_get_tokens)
+
+    def get_token_by_id(self, id):
+        """
+        :param id: The XML ID of the token
+        :type id: int
+        :return: The token
+        :rtype:class:`Token`
+        """
+        return self._get_tokens_dict().get(id)
 
 
 class Token():

@@ -22,14 +22,20 @@ class TestDocument(unittest.TestCase):
         self.assertEquals(expected, self._document.sentiment, "Sentiment property should return same value as call")
 
     def test_sentences(self):
-        self.assertIsNone(self._document._sentences, "Sentences should be lazy-loaded")
-        sentences = self._document._get_sentences()
-        self.assertIsNotNone(self._document._sentences, "Sentences should be memoized")
+        self.assertIsNone(self._document._sentences_dict, "Sentences should be lazy-loaded")
+        sentences = self._document._get_sentences_dict().values()
+        self.assertIsNotNone(self._document._sentences_dict, "Sentences should be memoized")
         self.assertGreater(len(sentences), 0, "We should have sentences")
         for sentence in sentences:
             self.assertIsInstance(sentence, Sentence, "Sentences should be a list of only sentences")
         self.assertEquals(self._document.sentences, sentences, "Sentences property should work")
-        self.assertIsInstance(self._document._sentences, OrderedDict, "Protected sentences should be ordered")
+        self.assertIsInstance(self._document._sentences_dict, OrderedDict, "Protected sentences should be ordered")
+
+    def test_get_sentence_by_id(self):
+        sentence = self._document.get_sentence_by_id(1)
+        self.assertIsInstance(sentence, Sentence, "Should return a Sentence instance")
+        self.assertEquals(sentence.id, 1, "Sentence returned should have the appropriate ID")
+        self.assertIsNone(self._document.get_sentence_by_id(-1), "If the ID doesn't exist, we should get None")
 
 
 class TestSentence(unittest.TestCase):
@@ -53,12 +59,18 @@ class TestSentence(unittest.TestCase):
         self.assertEquals(1, self._sentence.sentiment, "Sentiment should be an int")
 
     def test_tokens(self):
-        self.assertIsNone(self._sentence._tokens, "Tokens should be lazy-loaded")
+        self.assertIsNone(self._sentence._tokens_dict, "Tokens should be lazy-loaded")
         self.assertGreater(len(self._sentence.tokens), 0, "Tokens should be generated")
         for token in self._sentence.tokens:
             self.assertIsInstance(token, Token, "Tokens should all be of class Token")
-        self.assertIsNotNone(self._sentence._tokens, "Tokens should be memoized")
-        self.assertIsInstance(self._sentence._tokens, OrderedDict, "Protected tokens should be ordered")
+        self.assertIsNotNone(self._sentence._tokens_dict, "Tokens should be memoized")
+        self.assertIsInstance(self._sentence._tokens_dict, OrderedDict, "Protected tokens should be ordered")
+
+    def test_get_token_by_id(self):
+        token = self._sentence.get_token_by_id(1)
+        self.assertIsInstance(token, Token, "Should return a Token instance")
+        self.assertEquals(token.id, 1, "Token returned should have the appropriate ID")
+        self.assertIsNone(self._sentence.get_token_by_id(-1), "If the ID doesn't exist, we should get None")
 
 
 class TestToken(unittest.TestCase):
