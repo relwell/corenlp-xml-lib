@@ -4,6 +4,7 @@ Sub-module for handling document-level stuff
 from lxml import etree
 from collections import OrderedDict
 from nltk import Tree
+from dependencies import DependencyGraph
 
 
 class Document:
@@ -11,17 +12,14 @@ class Document:
     This class abstracts a Stanford CoreNLP Document
     """
 
-    _sentences_dict = None
-    _sentiment = None
-    _xml_string = None
-    _xml = None
-
     def __init__(self, xml_string):
         """
         Constructor method.
         :param xml_string: The XML string we're going to parse and represent, coming from CoreNLP
         :type xml_string: str
         """
+        self._sentences_dict = None
+        self._sentiment = None
         self._xml_string = xml_string
         self._xml = etree.fromstring(xml_string)
 
@@ -70,14 +68,6 @@ class Sentence():
     """
     This abstracts a sentence
     """
-    _id = None
-    _sentiment = None
-    _tokens_dict = None
-    _element = None
-    _parse = None
-    _basic_dependencies = None
-    _collapsed_dependencies = None
-    _collapsed_ccprocessed_dependencies = None
 
     def __init__(self, element):
         """
@@ -85,6 +75,14 @@ class Sentence():
         :param element: An etree element.
         :type element:class:`lxml.etree.ElementBase`
         """
+        self._id = None
+        self._sentiment = None
+        self._tokens_dict = None
+        self._element = None
+        self._parse = None
+        self._basic_dependencies = None
+        self._collapsed_dependencies = None
+        self._collapsed_ccprocessed_dependencies = None
         self._element = element
 
     @property
@@ -141,8 +139,46 @@ class Sentence():
         :rtype:class:`nltk.Tree`
         """
         if self._parse is None:
-            self._parse = Tree.parse(self._parse)
+            parse_text = self._element.xpath('parse/text()')
+            if len(parse_text) > 0:
+                self._parse = Tree.parse(parse_text[0])
         return self._parse
+
+    @property
+    def basic_dependencies(self):
+        """
+        :return: The dependency graph for basic dependencies
+        :rtype:class:`DependencyGraph`
+        """
+        if self._basic_dependencies is None:
+            deps = self._element.xpath('dependencies[@type="basic-dependencies"]')
+            if len(deps) > 0:
+                self._basic_dependencies = DependencyGraph(deps[0])
+        return self._basic_dependencies
+
+    @property
+    def collapsed_dependencies(self):
+        """
+        :return: The dependency graph for collapsed dependencies
+        :rtype:class:`DependencyGraph`
+        """
+        if self._basic_dependencies is None:
+            deps = self._element.xpath('dependencies[@type="collapsed-dependencies"]')
+            if len(deps) > 0:
+                self._basic_dependencies = DependencyGraph(deps[0])
+        return self._basic_dependencies
+
+    @property
+    def collapsed_ccprocessed_dependencies(self):
+        """
+        :return: The dependency graph for collapsed and cc processed dependencies
+        :rtype:class:`DependencyGraph`
+        """
+        if self._basic_dependencies is None:
+            deps = self._element.xpath('dependencies[@type="collapsed-ccprocessed-dependencies"]')
+            if len(deps) > 0:
+                self._basic_dependencies = DependencyGraph(deps[0])
+        return self._basic_dependencies
 
 
 class Token():
@@ -150,22 +186,20 @@ class Token():
     Wraps the token XML element
     """
 
-    _id = None
-    _word = None
-    _lemma = None
-    _character_offset_begin = None
-    _character_offset_end = None
-    _pos = None
-    _ner = None
-    _speaker = None
-    _element = None
-
     def __init__(self, element):
         """
         Constructor method
         :param element: An etree element
         :type element:class:`lxml.etree.ElementBase`
         """
+        self._id = None
+        self._word = None
+        self._lemma = None
+        self._character_offset_begin = None
+        self._character_offset_end = None
+        self._pos = None
+        self._ner = None
+        self._speaker = None
         self._element = element
 
     @property
@@ -269,5 +303,3 @@ class Token():
             if len(speakers) > 0:
                 self._speaker = speakers[0]
         return self._speaker
-
-

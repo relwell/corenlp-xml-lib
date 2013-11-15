@@ -5,6 +5,7 @@ sys.path.insert(0, os.path.join(".."))
 import unittest
 from corenlp_xml.document import Document, Sentence, Token
 from collections import OrderedDict
+from nltk import Tree
 
 
 class TestDocument(unittest.TestCase):
@@ -69,6 +70,12 @@ class TestSentence(unittest.TestCase):
         self.assertIsInstance(token, Token, "Should return a Token instance")
         self.assertEquals(token.id, 1, "Token returned should have the appropriate ID")
         self.assertIsNone(self._sentence.get_token_by_id(-1), "If the ID doesn't exist, we should get None")
+
+    def test_parse(self):
+        self.assertIsNone(self._sentence._parse, "Parse should be lazy-loaded")
+        parse = self._sentence.parse
+        self.assertIsInstance(parse, Tree, "Parse should be an nltk.Tree instance")
+        self.assertIsInstance(self._sentence._parse, Tree, "Parse should be memoized")
 
 
 class TestToken(unittest.TestCase):
