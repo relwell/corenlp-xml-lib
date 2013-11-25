@@ -3,7 +3,7 @@ import sys
 sys.path.insert(0, os.path.join(".."))
 
 import unittest
-from corenlp_xml.document import Document, Sentence, Token
+from corenlp_xml.document import Document, Sentence, Token, TokenList
 from collections import OrderedDict
 from nltk import Tree
 
@@ -60,6 +60,10 @@ class TestSentence(unittest.TestCase):
     def test_tokens(self):
         self.assertIsNone(self._sentence._tokens_dict, "Tokens should be lazy-loaded")
         self.assertGreater(len(self._sentence.tokens), 0, "Tokens should be generated")
+        self.assertIsInstance(self._sentence.tokens, TokenList, "Tokens should be a tokenlist")
+        self.assertEquals(str(self._sentence.tokens),
+                          " ".join([token.word for token in self._sentence.token]),
+                          "toString function of tokenlist should be words")
         for token in self._sentence.tokens:
             self.assertIsInstance(token, Token, "Tokens should all be of class Token")
         self.assertIsNotNone(self._sentence._tokens_dict, "Tokens should be memoized")

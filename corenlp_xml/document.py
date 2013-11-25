@@ -5,6 +5,7 @@ from lxml import etree
 from collections import OrderedDict
 from nltk import Tree
 from dependencies import DependencyGraph
+from coreference import Coreference
 
 
 class Document:
@@ -22,6 +23,7 @@ class Document:
         self._sentiment = None
         self._xml_string = xml_string
         self._xml = etree.fromstring(xml_string)
+        self._coreferences = None
 
     @property
     def sentiment(self):
@@ -62,6 +64,19 @@ class Document:
         :return:class:`Sentence`
         """
         return self._get_sentences_dict().get(id)
+
+    @property
+    def coreferences(self):
+        """
+        Returns a list of Coreference classes
+        :return: list
+        :rtype: list of `corenlp_xml.coreference.Coreference`
+        """
+        if self._coreferences is None:
+            coreferences = self._xml.xpath('/root/document/coreference/coreference')
+            if len(coreferences) > 0:
+                self._coreferences = [Coreference(self, element) for element in coreferences]
+        return self._coreferences
 
 
 class Sentence():
@@ -121,7 +136,7 @@ class Sentence():
         :return: a list of Token instances
         :rtype:list
         """
-        return self._get_tokens_dict().values()
+        return TokenList(self._get_tokens_dict().values())
 
     def get_token_by_id(self, id):
         """
@@ -179,6 +194,34 @@ class Sentence():
             if len(deps) > 0:
                 self._basic_dependencies = DependencyGraph(deps[0])
         return self._basic_dependencies
+
+
+class TokenList(list):
+
+    def __init__(self, *args):
+        super(TokenList, self).__init__(args[0])
+
+    def __add__(self, rhs):
+        return TokenList(list.__add__(self, rhs))
+
+    def __getslice__(self, i ,j):
+        return TokenList(list.__getslice__(self, i, j))
+
+    def __add__(self, other):
+        return TokenList(list.__add__(self, other))
+
+    def __mul__(self, other):
+        return TokenList(list.__mul__(self, other))
+
+    def __str__(self):
+        return " ".join([token.word for token in self])
+
+    def __getitem__(self, item):
+        result = list.__getitem__(self, item)
+        try:
+            return TokenList(result)
+        except TypeError:
+            return result
 
 
 class Token():
