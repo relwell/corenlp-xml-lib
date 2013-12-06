@@ -95,6 +95,7 @@ class Sentence():
         self._tokens_dict = None
         self._element = None
         self._parse = None
+        self._parse_string = None
         self._basic_dependencies = None
         self._collapsed_dependencies = None
         self._collapsed_ccprocessed_dependencies = None
@@ -148,15 +149,25 @@ class Sentence():
         return self._get_tokens_dict().get(id)
 
     @property
+    def parse_string(self):
+        """
+        :return: The parse string
+        :rtype:str
+        """
+        if self._parse_string is None:
+            parse_text = self._element.xpath('parse/text()')
+            if len(parse_text) > 0:
+                self._parse_string = parse_text[0]
+        return self._parse_string
+
+    @property
     def parse(self):
         """
         :return: The NLTK parse tree
         :rtype:class:`nltk.Tree`
         """
-        if self._parse is None:
-            parse_text = self._element.xpath('parse/text()')
-            if len(parse_text) > 0:
-                self._parse = Tree.parse(parse_text[0])
+        if self.parse_string is not None and self._parse is None:
+            self._parse = Tree.parse(self._parse_string)
         return self._parse
 
     @property
