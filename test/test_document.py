@@ -62,7 +62,7 @@ class TestSentence(unittest.TestCase):
         self.assertGreater(len(self._sentence.tokens), 0, "Tokens should be generated")
         self.assertIsInstance(self._sentence.tokens, TokenList, "Tokens should be a tokenlist")
         self.assertEquals(str(self._sentence.tokens),
-                          " ".join([token.word for token in self._sentence.token]),
+                          " ".join([token.word for token in self._sentence.tokens]),
                           "toString function of tokenlist should be words")
         for token in self._sentence.tokens:
             self.assertIsInstance(token, Token, "Tokens should all be of class Token")
