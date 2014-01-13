@@ -34,7 +34,7 @@ class Document:
         """
         if self._sentiment is None:
             results = self._xml.xpath('/root/document/sentences')
-            self._sentiment = float(results[0].get("averageSentiment")) if len(results) > 0 else None
+            self._sentiment = float(results[0].get("averageSentiment", 0)) if len(results) > 0 else None
         return self._sentiment
 
     def _get_sentences_dict(self):
