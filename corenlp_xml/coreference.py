@@ -61,7 +61,8 @@ class Mention():
         self._sentence = None
         self._head_id = int(element.xpath('head/text()')[0])
         self._head = None
-        self.text = element.xpath('text/text()')[0]
+        texts = element.xpath('text/text()')
+        self.text = texts[0] if len(texts) > 0 else ''  # one-off bug?
 
     @property
     def sentence(self):
