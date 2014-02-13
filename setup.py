@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name="corenlp-xml-lib",
+    name="corenlp-xml",
     version="0.0.1",
     author="Robert Elwell",
     author_email="robert.elwell@gmail.com",
