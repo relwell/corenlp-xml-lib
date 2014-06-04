@@ -16,8 +16,10 @@ class Document:
     def __init__(self, xml_string):
         """
         Constructor method.
+
         :param xml_string: The XML string we're going to parse and represent, coming from CoreNLP
         :type xml_string: str
+
         """
         self._sentences_dict = None
         self._sentiment = None
@@ -28,9 +30,11 @@ class Document:
     @property
     def sentiment(self):
         """
-        Returns average sentiment of document.
+        Returns average sentiment of document. Must have sentiment enabled in XML output.
+
         :return: average sentiment of the document
         :rtype: float
+
         """
         if self._sentiment is None:
             results = self._xml.xpath('/root/document/sentences')
@@ -40,8 +44,9 @@ class Document:
     def _get_sentences_dict(self):
         """
         Returns sentence objects
+
         :return: order dict of sentences
-        :rtype:`OrderedDict`
+        :rtype: OrderedDict
 
         """
         if self._sentences_dict is None:
@@ -53,19 +58,22 @@ class Document:
     def sentences(self):
         """
         Returns the ordered dict of sentences as a list.
+
         :return: list of sentences, in order
-        :rtype:list
+        :rtype: list
 
         """
         return self._get_sentences_dict().values()
 
     def get_sentence_by_id(self, id):
         """
+        Gets sentence by ID
+
         :param id: the ID of the sentence, as defined in the XML
         :type id: int
 
         :return: a sentence
-        :rtype:`Sentence`
+        :rtype: Sentence
 
         """
         return self._get_sentences_dict().get(id)
@@ -74,8 +82,9 @@ class Document:
     def coreferences(self):
         """
         Returns a list of Coreference classes
-        :return: list
-        :rtype: list of `corenlp_xml.coreference.Coreference`
+
+        :return: list of corenlp_xml.coreference.Coreference
+        :rtype: list
 
         """
         if self._coreferences is None:
@@ -93,8 +102,9 @@ class Sentence():
     def __init__(self, element):
         """
         Constructor method
+
         :param element: An etree element.
-        :type element:class:`lxml.etree.ElementBase`
+        :type element:class:lxml.etree.ElementBase
 
         """
         self._id = None
@@ -133,7 +143,7 @@ class Sentence():
     def _get_tokens_dict(self):
         """
         :return: The ordered dict of the tokens
-        :rtype:`OrderedDict`
+        :rtype: OrderedDict
 
         """
         if self._tokens_dict is None:
@@ -154,8 +164,9 @@ class Sentence():
         """
         :param id: The XML ID of the token
         :type id: int
+
         :return: The token
-        :rtype:`Token`
+        :rtype: Token
 
         """
         return self._get_tokens_dict().get(id)
@@ -177,7 +188,7 @@ class Sentence():
     def parse(self):
         """
         :return: The NLTK parse tree
-        :rtype:`nltk.Tree`
+        :rtype: nltk.Tree
 
         """
         if self.parse_string is not None and self._parse is None:
@@ -188,7 +199,7 @@ class Sentence():
     def basic_dependencies(self):
         """
         :return: The dependency graph for basic dependencies
-        :rtype:`DependencyGraph`
+        :rtype: DependencyGraph
 
         """
         if self._basic_dependencies is None:
@@ -201,7 +212,7 @@ class Sentence():
     def collapsed_dependencies(self):
         """
         :return: The dependency graph for collapsed dependencies
-        :rtype:`DependencyGraph`
+        :rtype: DependencyGraph
 
         """
         if self._basic_dependencies is None:
@@ -214,7 +225,7 @@ class Sentence():
     def collapsed_ccprocessed_dependencies(self):
         """
         :return: The dependency graph for collapsed and cc processed dependencies
-        :rtype:`DependencyGraph`
+        :rtype: DependencyGraph
 
         """
         if self._basic_dependencies is None:
@@ -260,8 +271,9 @@ class Token():
     def __init__(self, element):
         """
         Constructor method
+
         :param element: An etree element
-        :type element:class:`lxml.etree.ElementBase`
+        :type element:class:lxml.etree.ElementBase
 
         """
         self._id = None
@@ -278,6 +290,7 @@ class Token():
     def id(self):
         """
         Lazy-loads ID
+
         :return: The ID of the token element
         :rtype: int
 
@@ -290,6 +303,7 @@ class Token():
     def word(self):
         """
         Lazy-loads word value
+
         :return: The plain string value of the word
         :rtype: str
 
@@ -304,6 +318,7 @@ class Token():
     def lemma(self):
         """
         Lazy-loads the lemma for this word
+
         :return: The plain string value of the word lemma
         :rtype: str
 
@@ -318,6 +333,7 @@ class Token():
     def character_offset_begin(self):
         """
         Lazy-loads character offset begin node
+
         :return: the integer value of the offset
         :rtype: int
 
@@ -332,6 +348,7 @@ class Token():
     def character_offset_end(self):
         """
         Lazy-loads character offset end node
+
         :return: the integer value of the offset
         :rtype: int
 
@@ -346,6 +363,7 @@ class Token():
     def pos(self):
         """
         Lazy-loads the part of speech tag for this word
+
         :return: The plain string value of the POS tag for the word
         :rtype: str
 
@@ -360,6 +378,7 @@ class Token():
     def ner(self):
         """
         Lazy-loads the NER for this word
+
         :return: The plain string value of the NER tag for the word
         :rtype: str
 
@@ -374,6 +393,7 @@ class Token():
     def speaker(self):
         """
         Lazy-loads the speaker for this word
+
         :return: The plain string value of the speaker tag for the word
         :rtype: str
 

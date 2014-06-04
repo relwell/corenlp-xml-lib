@@ -11,10 +11,12 @@ class Coreference():
     def __init__(self, document, element):
         """
         Constructor method
+
         :param document: the document handling these relationships
-        :type document:class:`corenlp_xml.document.Document`
+        :type document: corenlp_xml.document.Document
         :param element: an lxml element
-        :type element:class:`lxml.etree.ElementBase`
+        :type element: lxml.etree.ElementBase
+
         """
         self._element = element
         self._mentions = None
@@ -23,6 +25,13 @@ class Coreference():
 
     @property
     def mentions(self):
+        """
+        Returns mentions
+
+        :return: list of mentions
+        :rtype: list
+
+        """
         if self._mentions is None:
             self._mentions = []
             for mention_element in self._element.xpath('mention'):
@@ -34,6 +43,13 @@ class Coreference():
 
     @property
     def representative(self):
+        """
+        Representative mention
+
+        :return: representative Mention
+        :rtype: Mention
+        
+        """
         if self._representative is None:
             """ Lazy-loaded! """
             self.mentions
@@ -48,10 +64,12 @@ class Mention():
     def __init__(self, coref, element):
         """
         Constructor method
+        
         :param coref: a coreference grouping
-        :type coref:class:`corenlp_xml.coreference.Coreference`
+        :type coref: corenlp_xml.coreference.Coreference
         :param element: an xml element
-        :type element:`lxml.etree.ElementBase`
+        :type element: lxml.etree.ElementBase
+        
         """
         self._coref = coref
         self._element = element
@@ -68,7 +86,8 @@ class Mention():
     def sentence(self):
         """
         :return: the sentence this mention relates to
-        :rtype:`corenlp_xml.document.Sentence`
+        :rtype: corenlp_xml.document.Sentence
+
         """
         if self._sentence is None:
             sentences = self._element.xpath('sentence/text()')
@@ -80,7 +99,7 @@ class Mention():
     def siblings(self):
         """
         :return: the other mentions for this coref group
-        :rtype:list
+        :rtype: list
         """
         return [mention for mention in self._coref.mentions if mention is not self]
 
@@ -88,7 +107,7 @@ class Mention():
     def tokens(self):
         """
         :return: a list of tokens relating to this sentence
-        :rtype:list
+        :rtype: list
         """
         return self.sentence.tokens[self._start-1:self._end-1]
 
@@ -96,7 +115,7 @@ class Mention():
     def head(self):
         """
         :return: the token corresponding to the head
-        :rtype:`corenlp_xml.document.Token`
+        :rtype: corenlp_xml.document.Token
         """
         if self._head is None:
             self._head = self.sentence.tokens[self._head_id]
