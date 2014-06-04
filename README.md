@@ -1,0 +1,1 @@
+Data abstraction library for Stanford CoreNLP XML parses. More documentation to be linked.
