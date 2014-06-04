@@ -1,5 +1,9 @@
 Data abstraction library for Stanford CoreNLP XML parses.
 
+You can install it with pip:
+
+    me@box$ pip install corenlp_xml
+
 Using it is as easy as:
 
     from corenlp_xml import Document
