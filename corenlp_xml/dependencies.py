@@ -14,6 +14,7 @@ class DependencyGraph():
 
         :param element: An lxml element
         :type element:class:lxml.etree.ElementBase
+
         """
         self._element = element
         self.type = element.get('type')
@@ -32,6 +33,7 @@ class DependencyGraph():
 
         :return: the node instance for that index
         :rtype:DependencyNode
+
         """
         return self._nodes.get(int(idx))
 
@@ -42,6 +44,7 @@ class DependencyGraph():
 
         :return: a list of DependencyLink instances
         :rtype:list
+
         """
         return [link for grouping in self._links_by_type.values() for link in grouping]
 
@@ -54,6 +57,7 @@ class DependencyGraph():
 
         :return: a list of DependencyLink instances
         :rtype:list
+
         """
         return self._links_by_type.get(dep_type, [])
 
@@ -74,6 +78,7 @@ class DependencyNode():
         :type graph:class:DependencyGraph
         :param element: The lxml element wrapping the node
         :type element:class:lxml.ElementBase
+
         """
         self._graph = graph
         self.idx = int(element.get('idx'))
@@ -93,6 +98,7 @@ class DependencyNode():
         :type graph:class:DependencyGraph
         :param element: The lxml element wrapping the node
         :type element:class:lxml.ElementBase
+
         """
         node = graph.get_node_by_idx(id(element.get("idx")))
         if node is None:
@@ -107,6 +113,7 @@ class DependencyNode():
 
         :return: a flat list of all governing nodes
         :rtype:list of DependencyNode
+
         """
         return [value for grouping in self._governors.values() for value in grouping]
 
@@ -117,6 +124,7 @@ class DependencyNode():
 
         :return: a flat list of all governing nodes
         :rtype:list of DependencyNode
+
         """
         return [value for grouping in self._dependents.values() for value in grouping]
 
@@ -126,6 +134,7 @@ class DependencyNode():
         :type dep_type:str
 
         :return: dependents matching the provided type
+
         """
         return self._dependents.get(dep_type, [])
 
@@ -135,6 +144,7 @@ class DependencyNode():
         :type dep_type:str
 
         :return: governors matching the provided type
+
         """
         return self._governors.get(dep_type, [])
 
@@ -148,6 +158,7 @@ class DependencyNode():
 
         :return: self, provides fluent interface
         :rtype:DependencyNode
+
         """
         self._governors[dep_type] = self._governors.get(dep_type, []) + [node]
         return self
@@ -155,11 +166,14 @@ class DependencyNode():
     def dependent(self, dep_type, node):
         """
         Registers a node as dependent on this node
+
         :param dep_type: The dependency type
         :type dep_type:str
         :param node:
+
         :return: self, provides fluent interface
         :rtype:DependencyNode
+
         """
         self._dependents[dep_type] = self._dependents.get(dep_type, []) + [node]
         return self
@@ -178,6 +192,7 @@ class DependencyLink():
         :type graph:class:DependencyGraph
         :param element: An lxml element
         :type element:class:lxml.etree.ElementBase
+
         """
         self._graph = graph
         self._element = element
@@ -198,6 +213,7 @@ class DependencyLink():
 
         :return: Governor node
         :rtype:DependencyNode
+
         """
         if self._governor is None:
             governors = self._element.xpath('governor')
@@ -212,6 +228,7 @@ class DependencyLink():
 
         :return: Dependent node
         :rtype:DependencyNode
+
         """
         if self._dependent is None:
             dependents = self._element.xpath('dependent')
