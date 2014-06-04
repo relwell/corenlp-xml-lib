@@ -28,7 +28,7 @@ class DependencyGraph():
         :param idx: the "idx" value of the node
         :type idx: int
         :return: the node instance for that index
-        :rtype:class:`DependencyNode`
+        :rtype:`DependencyNode`
         """
         return self._nodes.get(int(idx))
 
@@ -132,7 +132,7 @@ class DependencyNode():
         :type dep_type:str
         :param node:
         :return: self, provides fluent interface
-        :rtype:class:`DependencyNode`
+        :rtype:`DependencyNode`
         """
         self._governors[dep_type] = self._governors.get(dep_type, []) + [node]
         return self
@@ -144,7 +144,7 @@ class DependencyNode():
         :type dep_type:str
         :param node:
         :return: self, provides fluent interface
-        :rtype:class:`DependencyNode`
+        :rtype:`DependencyNode`
         """
         self._dependents[dep_type] = self._dependents.get(dep_type, []) + [node]
         return self
@@ -180,7 +180,7 @@ class DependencyLink():
         """
         Accesses the governor node
         :return: Governor node
-        :rtype:class:`DependencyNode`
+        :rtype:`DependencyNode`
         """
         if self._governor is None:
             governors = self._element.xpath('governor')
@@ -193,7 +193,7 @@ class DependencyLink():
         """
         Accesses the dependent node
         :return: Dependent node
-        :rtype:class:`DependencyNode`
+        :rtype:`DependencyNode`
         """
         if self._dependent is None:
             dependents = self._element.xpath('dependent')

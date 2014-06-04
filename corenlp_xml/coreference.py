@@ -51,7 +51,7 @@ class Mention():
         :param coref: a coreference grouping
         :type coref:class:`corenlp_xml.coreference.Coreference`
         :param element: an xml element
-        :type element:class:`lxml.etree.ElementBase`
+        :type element:`lxml.etree.ElementBase`
         """
         self._coref = coref
         self._element = element
@@ -68,7 +68,7 @@ class Mention():
     def sentence(self):
         """
         :return: the sentence this mention relates to
-        :rtype:class:`corenlp_xml.document.Sentence`
+        :rtype:`corenlp_xml.document.Sentence`
         """
         if self._sentence is None:
             sentences = self._element.xpath('sentence/text()')
@@ -96,7 +96,7 @@ class Mention():
     def head(self):
         """
         :return: the token corresponding to the head
-        :rtype:class:`corenlp_xml.document.Token`
+        :rtype:`corenlp_xml.document.Token`
         """
         if self._head is None:
             self._head = self.sentence.tokens[self._head_id]

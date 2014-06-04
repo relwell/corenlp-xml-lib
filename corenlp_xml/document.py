@@ -41,7 +41,8 @@ class Document:
         """
         Returns sentence objects
         :return: order dict of sentences
-        :rtype:class:`OrderedDict`
+        :rtype:`OrderedDict`
+
         """
         if self._sentences_dict is None:
             sentences = [Sentence(element) for element in self._xml.xpath('/root/document/sentences/sentence')]
@@ -54,6 +55,7 @@ class Document:
         Returns the ordered dict of sentences as a list.
         :return: list of sentences, in order
         :rtype:list
+
         """
         return self._get_sentences_dict().values()
 
@@ -61,7 +63,10 @@ class Document:
         """
         :param id: the ID of the sentence, as defined in the XML
         :type id: int
-        :return:class:`Sentence`
+
+        :return: a sentence
+        :rtype:`Sentence`
+
         """
         return self._get_sentences_dict().get(id)
 
@@ -71,6 +76,7 @@ class Document:
         Returns a list of Coreference classes
         :return: list
         :rtype: list of `corenlp_xml.coreference.Coreference`
+
         """
         if self._coreferences is None:
             coreferences = self._xml.xpath('/root/document/coreference/coreference')
@@ -89,6 +95,7 @@ class Sentence():
         Constructor method
         :param element: An etree element.
         :type element:class:`lxml.etree.ElementBase`
+
         """
         self._id = None
         self._sentiment = None
@@ -105,7 +112,8 @@ class Sentence():
     def id(self):
         """
         :return: the ID attribute of the sentence
-        :rtype id: int
+        :rtype: int
+
         """
         if self._id is None:
             self._id = int(self._element.get('id'))
@@ -115,7 +123,8 @@ class Sentence():
     def sentiment(self):
         """
         :return: the sentiment value of this sentence
-        :rtype int:
+        :rtype: int
+
         """
         if self._sentiment is None:
             self._sentiment = int(self._element.get('sentiment'))
@@ -124,7 +133,8 @@ class Sentence():
     def _get_tokens_dict(self):
         """
         :return: The ordered dict of the tokens
-        :rtype:class:`OrderedDict`
+        :rtype:`OrderedDict`
+
         """
         if self._tokens_dict is None:
             tokens = [Token(element) for element in self._element.xpath('tokens/token')]
@@ -135,7 +145,8 @@ class Sentence():
     def tokens(self):
         """
         :return: a list of Token instances
-        :rtype:list
+        :rtype: list
+
         """
         return TokenList(self._get_tokens_dict().values())
 
@@ -144,7 +155,8 @@ class Sentence():
         :param id: The XML ID of the token
         :type id: int
         :return: The token
-        :rtype:class:`Token`
+        :rtype:`Token`
+
         """
         return self._get_tokens_dict().get(id)
 
@@ -152,7 +164,8 @@ class Sentence():
     def parse_string(self):
         """
         :return: The parse string
-        :rtype:str
+        :rtype: str
+
         """
         if self._parse_string is None:
             parse_text = self._element.xpath('parse/text()')
@@ -164,7 +177,8 @@ class Sentence():
     def parse(self):
         """
         :return: The NLTK parse tree
-        :rtype:class:`nltk.Tree`
+        :rtype:`nltk.Tree`
+
         """
         if self.parse_string is not None and self._parse is None:
             self._parse = Tree.parse(self._parse_string)
@@ -174,7 +188,8 @@ class Sentence():
     def basic_dependencies(self):
         """
         :return: The dependency graph for basic dependencies
-        :rtype:class:`DependencyGraph`
+        :rtype:`DependencyGraph`
+
         """
         if self._basic_dependencies is None:
             deps = self._element.xpath('dependencies[@type="basic-dependencies"]')
@@ -186,7 +201,8 @@ class Sentence():
     def collapsed_dependencies(self):
         """
         :return: The dependency graph for collapsed dependencies
-        :rtype:class:`DependencyGraph`
+        :rtype:`DependencyGraph`
+
         """
         if self._basic_dependencies is None:
             deps = self._element.xpath('dependencies[@type="collapsed-dependencies"]')
@@ -198,7 +214,8 @@ class Sentence():
     def collapsed_ccprocessed_dependencies(self):
         """
         :return: The dependency graph for collapsed and cc processed dependencies
-        :rtype:class:`DependencyGraph`
+        :rtype:`DependencyGraph`
+
         """
         if self._basic_dependencies is None:
             deps = self._element.xpath('dependencies[@type="collapsed-ccprocessed-dependencies"]')
@@ -245,6 +262,7 @@ class Token():
         Constructor method
         :param element: An etree element
         :type element:class:`lxml.etree.ElementBase`
+
         """
         self._id = None
         self._word = None
@@ -262,6 +280,7 @@ class Token():
         Lazy-loads ID
         :return: The ID of the token element
         :rtype: int
+
         """
         if self._id is None:
             self._id = int(self._element.get('id'))
@@ -273,6 +292,7 @@ class Token():
         Lazy-loads word value
         :return: The plain string value of the word
         :rtype: str
+
         """
         if self._word is None:
             words = self._element.xpath('word/text()')
@@ -286,6 +306,7 @@ class Token():
         Lazy-loads the lemma for this word
         :return: The plain string value of the word lemma
         :rtype: str
+
         """
         if self._lemma is None:
             lemmata = self._element.xpath('lemma/text()')
@@ -299,6 +320,7 @@ class Token():
         Lazy-loads character offset begin node
         :return: the integer value of the offset
         :rtype: int
+
         """
         if self._character_offset_begin is None:
             offsets = self._element.xpath('CharacterOffsetBegin/text()')
@@ -312,6 +334,7 @@ class Token():
         Lazy-loads character offset end node
         :return: the integer value of the offset
         :rtype: int
+
         """
         if self._character_offset_end is None:
             offsets = self._element.xpath('CharacterOffsetEnd/text()')
@@ -325,6 +348,7 @@ class Token():
         Lazy-loads the part of speech tag for this word
         :return: The plain string value of the POS tag for the word
         :rtype: str
+
         """
         if self._pos is None:
             poses = self._element.xpath('POS/text()')
@@ -338,6 +362,7 @@ class Token():
         Lazy-loads the NER for this word
         :return: The plain string value of the NER tag for the word
         :rtype: str
+
         """
         if self._ner is None:
             ners = self._element.xpath('NER/text()')
@@ -351,6 +376,7 @@ class Token():
         Lazy-loads the speaker for this word
         :return: The plain string value of the speaker tag for the word
         :rtype: str
+
         """
         if self._speaker is None:
             speakers = self._element.xpath('Speaker/text()')

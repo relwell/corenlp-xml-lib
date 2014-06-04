@@ -6,24 +6,19 @@
 Welcome to CoreNLP XML Library's documentation!
 ===============================================
 
-This library is designed to add a data model over Stanford CoreNLP's basic XML output..
+This library is designed to add a data model over Stanford CoreNLP's basic XML output.
 
-.. automodule:: corenlp_xml
-   :members:
-
-.. automodule:: corenlp_xml.coreference
-   :members:
-
-.. automodule:: corenlp_xml.dependencies
-   :members:
-
-.. automodule:: corenlp_xml.document
-   :members:
+The Document class is designed to provide lazy-loaded access to information
+from syntax, coreference, and dependency parse structures within the XML.
 
 Contents:
 
 .. toctree::
    :maxdepth: 2
+
+   document
+   dependencies
+   coreference
 
 
 
