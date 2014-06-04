@@ -8,6 +8,18 @@ Welcome to CoreNLP XML Library's documentation!
 
 This library is designed to add a data model over Stanford CoreNLP's basic XML output..
 
+.. automodule:: corenlp_xml
+   :members:
+
+.. automodule:: corenlp_xml.coreference
+   :members:
+
+.. automodule:: corenlp_xml.dependencies
+   :members:
+
+.. automodule:: corenlp_xml.document
+   :members:
+
 Contents:
 
 .. toctree::
