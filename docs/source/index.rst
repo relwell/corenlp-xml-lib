@@ -28,6 +28,7 @@ What You Can Do With This Library
 Some code examples:
 
 .. code-block:: python
+
    from corenlp_xml import Document
    
    doc = Document(xml_string)
