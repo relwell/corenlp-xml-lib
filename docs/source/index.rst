@@ -11,6 +11,42 @@ This library is designed to add a data model over Stanford CoreNLP's basic XML o
 The Document class is designed to provide lazy-loaded access to information
 from syntax, coreference, and dependency parse structures within the XML.
 
+
+
+Installing the Library
+----------------------
+
+It's as easy as 
+
+.. code-block:: bash
+
+   pip install corenlp_xml
+
+
+What You Can Do With This Library
+---------------------------------
+Some code examples:
+
+.. code-block:: python
+   from corenlp_xml import Document
+   
+   doc = Document(xml_string)
+
+   # The first sentence
+   s1 = doc.sentences[0]
+
+   # Noun phrases for the first sentence
+   s1_nps = s1.phrase_strings("np")
+
+   # Semantic Head of First Sentence
+   s1_head = s1.semantic_head
+
+   # Find all representative coreferences matching noun phrases in sentence 1
+   s1_corefs = [coref for coref in doc.coreferences
+                if coref.representative and coref.sentence == s1]
+
+
+
 Contents:
 
 .. toctree::
