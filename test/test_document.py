@@ -4,6 +4,7 @@ sys.path.insert(0, os.path.join(".."))
 
 import unittest
 from corenlp_xml.document import Document, Sentence, Token, TokenList
+from corenlp_xml.dependencies import DependencyNode
 from collections import OrderedDict
 from nltk import Tree
 
@@ -68,6 +69,18 @@ class TestSentence(unittest.TestCase):
             self.assertIsInstance(token, Token, "Tokens should all be of class Token")
         self.assertIsNotNone(self._sentence._tokens_dict, "Tokens should be memoized")
         self.assertIsInstance(self._sentence._tokens_dict, OrderedDict, "Protected tokens should be ordered")
+
+    def test_head(self):
+        self.assertIsInstance(self._sentence.semantic_head, DependencyNode)
+        self.assertEquals(self._sentence.semantic_head.text, "demonstrates")
+
+    def test_phrase_strings(self):
+        self.assertIn("a flawed property", self._sentence.phrase_strings("NP"))
+
+    def test_subtrees_for_phrase(self):
+        t = self._sentence.subtrees_for_phrase("NP")[0]
+        self.assertIsInstance(t, Tree)
+        self.assertEquals("property", t[-1].leaves()[0])
 
     def test_get_token_by_id(self):
         token = self._sentence.get_token_by_id(1)

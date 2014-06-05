@@ -201,9 +201,11 @@ class Sentence():
         """
         Returns the semantic head of the sentence -- AKA the dependent of the root node of the dependency parse
 
-        :return
+        :return: the mention related to the semantic head
+        :rtype: corenlp_xml.coreference.Mention
 
         """
+        return self.basic_dependencies.links_by_type(u"root")[0].dependent
 
     @property
     def parse_string(self):
