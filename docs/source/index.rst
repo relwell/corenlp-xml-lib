@@ -38,8 +38,8 @@ Some code examples:
    # Noun phrases for the first sentence
    s1_nps = s1.phrase_strings("np")
 
-   # Semantic Head of First Sentence
-   s1_head = s1.semantic_head
+   # Text of semantic head of first sentence
+   s1_head = s1.semantic_head.text
 
    # Find all representative coreferences matching noun phrases in sentence 1
    s1_corefs = [coref for coref in doc.coreferences
