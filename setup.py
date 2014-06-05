@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="corenlp-xml",
-    version="0.0.1",
+    version="1.0.0",
     author="Robert Elwell",
     author_email="robert.elwell@gmail.com",
     description="Library for interacting with the XML output of the Stanford CoreNLP pipeline.",
