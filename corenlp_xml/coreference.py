@@ -47,7 +47,7 @@ class Coreference():
         Representative mention
 
         :return: representative Mention
-        :rtype: Mention
+        :rtype: corenlp_xml.coreference.Mention
         
         """
         if self._representative is None:
@@ -85,8 +85,10 @@ class Mention():
     @property
     def sentence(self):
         """
-        :return: the sentence this mention relates to
-        :rtype: corenlp_xml.document.Sentence
+        The sentence related to this mention
+
+        :getter: returns the sentence this mention relates to
+        :type: corenlp_xml.document.Sentence
 
         """
         if self._sentence is None:
@@ -98,24 +100,33 @@ class Mention():
     @property
     def siblings(self):
         """
-        :return: the other mentions for this coref group
-        :rtype: list
+        Accesses other mentions in this coref group
+
+        :getter: the other mentions for this coref group
+        :type: list of corenlp_xml.coreference.Mention
+
         """
         return [mention for mention in self._coref.mentions if mention is not self]
 
     @property
     def tokens(self):
         """
-        :return: a list of tokens relating to this sentence
-        :rtype: list
+        A list of tokens related to this mention
+
+        :getter: returns a list of tokens relating to this mention
+        :type: list of corenlp_xml.document.Token
+
         """
         return self.sentence.tokens[self._start-1:self._end-1]
 
     @property
     def head(self):
         """
-        :return: the token corresponding to the head
-        :rtype: corenlp_xml.document.Token
+        The token serving as the "head" of the mention
+
+        :getter: the token corresponding to the head
+        :type: corenlp_xml.document.Token
+
         """
         if self._head is None:
             self._head = self.sentence.tokens[self._head_id]
@@ -125,5 +136,9 @@ class Mention():
     def representative(self):
         """
         Interprets and normalizes the "representative" attribute"
+
+        :getter: determines whether the mention is representative
+        :type: bool
+
         """
         return self._element.get('representative', False) == 'true'

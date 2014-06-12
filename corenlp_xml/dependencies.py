@@ -32,7 +32,7 @@ class DependencyGraph():
         :type idx: int
 
         :return: the node instance for that index
-        :type: DependencyNode
+        :type: corenlp_xml.dependencies.DependencyNode
 
         """
         return self._nodes.get(int(idx))
@@ -42,8 +42,8 @@ class DependencyGraph():
         """
         Accesses links within the graph
 
-        :return: a list of DependencyLink instances
-        :type: list
+        :return: a list of corenlp_xml.dependencies.DependencyLink instances
+        :type: list of corenlp_xml.dependencies.DependencyLink
 
         """
         return [link for grouping in self._links_by_type.values() for link in grouping]
@@ -55,8 +55,8 @@ class DependencyGraph():
         :param dep_type: the depency type
         :type dep_type: str
 
-        :return: a list of DependencyLink instances
-        :rtype: list
+        :return: a list of corenlp_xml.dependencies.DependencyLink instances
+        :type: list of corenlp_xml.dependencies.DependencyLink
 
         """
         return self._links_by_type.get(dep_type, [])
@@ -75,9 +75,9 @@ class DependencyNode():
         Instantiates the node in the graph
 
         :param graph: The dependency graph this node is a member of
-        :type graph: class:DependencyGraph
+        :type graph: corenlp_xml.dependencies.DependencyGraph
         :param element: The lxml element wrapping the node
-        :type element: class:lxml.ElementBase
+        :type element: lxml.ElementBase
 
         """
         self._graph = graph
@@ -95,9 +95,9 @@ class DependencyNode():
         Instantiates the node in the graph if it's not already stored in the graph
 
         :param graph: The dependency graph this node is a member of
-        :type graph: class:DependencyGraph
+        :type graph: corenlp_xml.dependencies.DependencyGraph
         :param element: The lxml element wrapping the node
-        :type element: class:lxml.ElementBase
+        :type element: lxml.ElementBase
 
         """
         node = graph.get_node_by_idx(id(element.get("idx")))
@@ -111,8 +111,8 @@ class DependencyNode():
         """
         Gets governing nodes
 
-        :return: a flat list of all governing nodes
-        :type: list of DependencyNode
+        :getter: returns a flat list of all governing nodes
+        :type: list of corenlp_xml.dependencies.DependencyNode
 
         """
         return [value for grouping in self._governors.values() for value in grouping]
@@ -122,14 +122,16 @@ class DependencyNode():
         """
         Gets dependent nodes
 
-        :return: a flat list of all governing nodes
-        :type: list of DependencyNode
+        :getter: returns a flat list of all governing nodes
+        :type: list of corenlp_xml.dependencies.DependencyNode
 
         """
         return [value for grouping in self._dependents.values() for value in grouping]
 
     def dependents_by_type(self, dep_type):
         """
+        Gets the dependents of this node by a given dependency type
+
         :param dep_type: The dependency type
         :type dep_type: str
 
@@ -140,6 +142,8 @@ class DependencyNode():
 
     def governors_by_type(self, dep_type):
         """
+        Gets the governors of this node filtered by a dependency type
+
         :param dep_type: The dependency type
         :type dep_type: str
 
@@ -157,7 +161,7 @@ class DependencyNode():
         :param node:
 
         :return: self, provides fluent interface
-        :type: DependencyNode
+        :rtype: corenlp_xml.dependencies.DependencyNode
 
         """
         self._governors[dep_type] = self._governors.get(dep_type, []) + [node]
@@ -169,10 +173,11 @@ class DependencyNode():
 
         :param dep_type: The dependency type
         :type dep_type: str
-        :param node:
+        :param node: The node to be registered as a dependent
+        :type node: corenlp_xml.dependencies.DependencyNode
 
         :return: self, provides fluent interface
-        :type: DependencyNode
+        :rtype: corenlp_xml.dependencies.DependencyNode
 
         """
         self._dependents[dep_type] = self._dependents.get(dep_type, []) + [node]
@@ -189,9 +194,9 @@ class DependencyLink():
         Constructor method
 
         :param graph: The parent graph
-        :type graph: class:DependencyGraph
+        :type graph: corenlp_xml.dependencies.DependencyGraph
         :param element: An lxml element
-        :type element: class:lxml.etree.ElementBase
+        :type element: lxml.etree.ElementBase
 
         """
         self._graph = graph
@@ -211,8 +216,8 @@ class DependencyLink():
         """
         Accesses the governor node
 
-        :return: Governor node
-        :type: DependencyNode
+        :getter: Returns the Governor node
+        :type: corenlp_xml.dependencies.DependencyNode
 
         """
         if self._governor is None:
@@ -226,8 +231,8 @@ class DependencyLink():
         """
         Accesses the dependent node
 
-        :return: Dependent node
-        :type: DependencyNode
+        :getter: returns the Dependent node
+        :type: corenlp_xml.dependencies.DependencyNode
 
         """
         if self._dependent is None:
