@@ -32,8 +32,8 @@ class Document:
         """
         Returns average sentiment of document. Must have sentiment enabled in XML output.
 
-        :return: average sentiment of the document
-        :rtype: float
+        :getter: returns average sentiment of the document
+        :type: float
 
         """
         if self._sentiment is None:
@@ -46,7 +46,7 @@ class Document:
         Returns sentence objects
 
         :return: order dict of sentences
-        :rtype: OrderedDict
+        :rtype: collections.OrderedDict
 
         """
         if self._sentences_dict is None:
@@ -59,8 +59,8 @@ class Document:
         """
         Returns the ordered dict of sentences as a list.
 
-        :return: list of sentences, in order
-        :rtype: list
+        :getter: returns list of sentences, in order
+        :type: list of corenlp_xml.document.Sentence
 
         """
         return self._get_sentences_dict().values()
@@ -73,7 +73,7 @@ class Document:
         :type id: int
 
         :return: a sentence
-        :rtype: Sentence
+        :rtype: corenlp_xml.document.Sentence
 
         """
         return self._get_sentences_dict().get(id)
@@ -83,8 +83,8 @@ class Document:
         """
         Returns a list of Coreference classes
 
-        :return: list of corenlp_xml.coreference.Coreference
-        :rtype: list
+        :getter: Returns a list of coreferences
+        :type: list of corenlp_xml.coreference.Coreference
 
         """
         if self._coreferences is None:
@@ -132,8 +132,10 @@ class Sentence():
     @property
     def sentiment(self):
         """
-        :return: the sentiment value of this sentence
-        :rtype: int
+        The sentiment of this sentence
+
+        :getter: Returns the sentiment value of this sentence
+        :type: int
 
         """
         if self._sentiment is None:
@@ -142,8 +144,10 @@ class Sentence():
 
     def _get_tokens_dict(self):
         """
+        Accesses tokens dict
+
         :return: The ordered dict of the tokens
-        :rtype: OrderedDict
+        :rtype: collections.OrderedDict
 
         """
         if self._tokens_dict is None:
@@ -154,19 +158,23 @@ class Sentence():
     @property
     def tokens(self):
         """
-        :return: a list of Token instances
-        :rtype: list
+        The tokens related to this sentence
+
+        :getter: Returns a a list of Token instances
+        :type: corenlp_xml.document.TokenList
 
         """
         return TokenList(self._get_tokens_dict().values())
 
     def get_token_by_id(self, id):
         """
+        Accesses token by the XML ID
+
         :param id: The XML ID of the token
         :type id: int
 
         :return: The token
-        :rtype: Token
+        :rtype: corenlp_xml.document.Token
 
         """
         return self._get_tokens_dict().get(id)
@@ -179,7 +187,7 @@ class Sentence():
         :type phrase_type: str
 
         :return: a list of NLTK.Tree.Subtree instances
-        :rtype: list
+        :rtype: list of NLTK.Tree.Subtree
 
         """
         return [subtree for subtree in self.parse.subtrees() if subtree.node.lower() == phrase_type.lower()]
@@ -210,8 +218,10 @@ class Sentence():
     @property
     def parse_string(self):
         """
-        :return: The parse string
-        :rtype: str
+        Accesses the S-Expression parse string stored on the XML document
+
+        :getter: Returns the parse string
+        :type: str
 
         """
         if self._parse_string is None:
@@ -223,8 +233,10 @@ class Sentence():
     @property
     def parse(self):
         """
-        :return: The NLTK parse tree
-        :rtype: nltk.Tree
+        Accesses the parse tree based on the S-expression parse string in the XML
+
+        :getter: Returns the NLTK parse tree
+        :type: nltk.Tree
 
         """
         if self.parse_string is not None and self._parse is None:
@@ -234,8 +246,10 @@ class Sentence():
     @property
     def basic_dependencies(self):
         """
-        :return: The dependency graph for basic dependencies
-        :rtype: DependencyGraph
+        Accesses basic dependencies from the XML output
+
+        :getter: Returns the dependency graph for basic dependencies
+        :type: corenlp_xml.dependencies.DependencyGraph
 
         """
         if self._basic_dependencies is None:
@@ -247,8 +261,10 @@ class Sentence():
     @property
     def collapsed_dependencies(self):
         """
-        :return: The dependency graph for collapsed dependencies
-        :rtype: DependencyGraph
+        Accessess collapsed dependencies for this sentence
+
+        :getter: Returns the dependency graph for collapsed dependencies
+        :type: corenlp_xml.dependencies.DependencyGraph
 
         """
         if self._basic_dependencies is None:
@@ -260,8 +276,10 @@ class Sentence():
     @property
     def collapsed_ccprocessed_dependencies(self):
         """
-        :return: The dependency graph for collapsed and cc processed dependencies
-        :rtype: DependencyGraph
+        Accesses collapsed, CC-processed dependencies
+
+        :getter: Returns the dependency graph for collapsed and cc processed dependencies
+        :type: corenlp_xml.dependencies.DependencyGraph
 
         """
         if self._basic_dependencies is None:
@@ -309,7 +327,7 @@ class Token():
         Constructor method
 
         :param element: An etree element
-        :type element:class:lxml.etree.ElementBase
+        :type element: lxml.etree.ElementBase
 
         """
         self._id = None
@@ -327,8 +345,8 @@ class Token():
         """
         Lazy-loads ID
 
-        :return: The ID of the token element
-        :rtype: int
+        :getter: Returns the ID of the token element
+        :type: int
 
         """
         if self._id is None:
@@ -340,8 +358,8 @@ class Token():
         """
         Lazy-loads word value
 
-        :return: The plain string value of the word
-        :rtype: str
+        :getter: Returns the plain string value of the word
+        :type: str
 
         """
         if self._word is None:
@@ -355,8 +373,8 @@ class Token():
         """
         Lazy-loads the lemma for this word
 
-        :return: The plain string value of the word lemma
-        :rtype: str
+        :getter: Returns the plain string value of the word lemma
+        :type: str
 
         """
         if self._lemma is None:
@@ -370,8 +388,8 @@ class Token():
         """
         Lazy-loads character offset begin node
 
-        :return: the integer value of the offset
-        :rtype: int
+        :getter: Returns the integer value of the beginning offset
+        :type: int
 
         """
         if self._character_offset_begin is None:
@@ -385,8 +403,8 @@ class Token():
         """
         Lazy-loads character offset end node
 
-        :return: the integer value of the offset
-        :rtype: int
+        :getter: Returns the integer value of the ending offset
+        :type: int
 
         """
         if self._character_offset_end is None:
@@ -400,8 +418,8 @@ class Token():
         """
         Lazy-loads the part of speech tag for this word
 
-        :return: The plain string value of the POS tag for the word
-        :rtype: str
+        :getter: Returns the plain string value of the POS tag for the word
+        :type: str
 
         """
         if self._pos is None:
@@ -415,8 +433,8 @@ class Token():
         """
         Lazy-loads the NER for this word
 
-        :return: The plain string value of the NER tag for the word
-        :rtype: str
+        :getter: Returns the plain string value of the NER tag for the word
+        :type: str
 
         """
         if self._ner is None:
@@ -430,8 +448,8 @@ class Token():
         """
         Lazy-loads the speaker for this word
 
-        :return: The plain string value of the speaker tag for the word
-        :rtype: str
+        :getter: Returns the plain string value of the speaker tag for the word
+        :type: str
 
         """
         if self._speaker is None:
