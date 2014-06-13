@@ -210,7 +210,6 @@ class DependencyLink():
         self.dependent.governor(self.type, self.governor)
         self.governor.dependent(self.type, self.dependent)
 
-
     @property
     def governor(self):
         """
