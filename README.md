@@ -6,7 +6,7 @@ You can install it with pip:
 
 Using it is as easy as:
 
-    from corenlp_xml import Document
+    from corenlp_xml.document import Document
     d = Document(corenlp_xml_output_string)
     sentences = d.sentences
     word_to_pos = dict([(token.word, token.pos) for token in sentences[0].tokens])

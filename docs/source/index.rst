@@ -29,7 +29,7 @@ Some code examples:
 
 .. code-block:: python
 
-   from corenlp_xml import Document
+   from corenlp_xml.document import Document
    
    doc = Document(xml_string)
 
