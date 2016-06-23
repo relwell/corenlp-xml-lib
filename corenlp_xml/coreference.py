@@ -129,7 +129,7 @@ class Mention():
 
         """
         if self._head is None:
-            self._head = self.sentence.tokens[self._head_id]
+            self._head = self.sentence.tokens[self._head_id-1]
         return self._head
 
     @property
