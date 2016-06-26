@@ -4,9 +4,8 @@ Sub-module for handling document-level stuff
 from lxml import etree
 from collections import OrderedDict
 from nltk import Tree
-from dependencies import DependencyGraph
-from coreference import Coreference
-
+from corenlp_xml.dependencies import DependencyGraph
+from corenlp_xml.coreference import Coreference
 
 class Document:
     """
